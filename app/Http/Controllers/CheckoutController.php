@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Session;
 
 class CheckoutController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
          $cart = null;
          if (Auth::check()) {
@@ -23,6 +23,18 @@ class CheckoutController extends Controller
 
         if (!$cart || $cart->items->isEmpty()) {
             return redirect()->route('cart.index')->with('error', 'Cart is empty');
+        }
+
+        // Filter selected games if provided
+        $selectedGameIds = $request->get('selected') ? explode(',', $request->get('selected')) : [];
+        if (!empty($selectedGameIds)) {
+            $cart->items = $cart->items->filter(function($item) use ($selectedGameIds) {
+                return in_array($item->game_id, $selectedGameIds);
+            });
+        }
+
+        if ($cart->items->isEmpty()) {
+            return redirect()->route('cart.index')->with('error', 'Please select at least one game to checkout');
         }
 
         return view('checkout.index', compact('cart'));
