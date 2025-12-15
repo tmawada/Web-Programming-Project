@@ -1,16 +1,34 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             <h2 class="font-semibold text-xl text-cyber-primary leading-tight uppercase tracking-wider">
                 {{ __('Game Store') }}
             </h2>
-            <form method="GET" action="{{ route('games.index') }}" class="flex">
-                <input type="text" name="search" placeholder="Search games..." value="{{ request('search') }}" 
-                    class="bg-cyber-bg border border-cyber-secondary text-cyber-text rounded-l-md focus:ring-cyber-primary focus:border-cyber-primary">
-                <button type="submit" class="bg-cyber-secondary text-white px-4 py-2 rounded-r-md hover:bg-cyber-primary transition">
-                    Search
-                </button>
-            </form>
+            <div class="w-full md:w-96" x-data="{ 
+                search: '{{ request('search') }}',
+                debounceTimer: null,
+                performSearch() {
+                    clearTimeout(this.debounceTimer);
+                    this.debounceTimer = setTimeout(() => {
+                        if (this.search.length >= 2 || this.search.length === 0) {
+                            window.location.href = '{{ route('games.index') }}' + (this.search ? '?search=' + encodeURIComponent(this.search) : '');
+                        }
+                    }, 500);
+                }
+            }">
+                <div class="relative">
+                    <input 
+                        type="text" 
+                        x-model="search"
+                        @input="performSearch()"
+                        placeholder="Search games by title, genre..." 
+                        class="w-full bg-cyber-bg border-2 border-cyber-secondary/50 text-cyber-text rounded-lg pl-10 pr-4 py-2.5 focus:ring-2 focus:ring-cyber-primary focus:border-cyber-primary transition placeholder-gray-500"
+                    >
+                    <svg class="absolute left-3 top-3 h-5 w-5 text-cyber-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+            </div>
         </div>
     </x-slot>
 

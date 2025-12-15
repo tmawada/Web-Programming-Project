@@ -7,10 +7,17 @@
                 <div class="relative h-96 w-full">
                     <img src="{{ $game->cover_image }}" alt="{{ $game->title }}" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-cyber-alt via-cyber-alt/50 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 p-8">
-                        <span class="bg-cyber-primary text-white text-sm font-bold px-3 py-1 rounded mb-2 inline-block">{{ $game->genre }}</span>
-                        <h1 class="text-5xl font-extrabold text-white tracking-tight drop-shadow-lg mb-2">{{ $game->title }}</h1>
-                        <p class="text-xl text-gray-300">{{ $game->developer }} / {{ $game->publisher }}</p>
+                    <div class="absolute bottom-0 left-0 p-8 flex items-end gap-6">
+                        <!-- Game Cover Image beside title -->
+                        <div class="hidden md:block flex-shrink-0 relative">
+                            <img src="{{ $game->cover_image }}" alt="{{ $game->title }}" class="w-48 h-64 object-cover rounded-lg shadow-2xl" style="mask-image: radial-gradient(ellipse at center, black 60%, transparent 100%); -webkit-mask-image: radial-gradient(ellipse at center, black 60%, transparent 100%);">
+                        </div>
+                        <!-- Title and Info -->
+                        <div class="flex-1">
+                            <span class="bg-cyber-primary text-white text-sm font-bold px-3 py-1 rounded mb-2 inline-block">{{ $game->genre }}</span>
+                            <h1 class="text-5xl font-extrabold text-white tracking-tight drop-shadow-lg mb-2">{{ $game->title }}</h1>
+                            <p class="text-xl text-gray-300">{{ $game->publisher }}</p>
+                        </div>
                     </div>
                 </div>
 
