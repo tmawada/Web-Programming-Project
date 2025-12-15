@@ -36,6 +36,14 @@ class GameController extends Controller
             }
         }
         
-        return view('games.show', compact('game', 'inCart'));
+        // Check if user owns the game
+        $isPurchased = false;
+        if (auth()->check()) {
+            $isPurchased = \App\Models\UserGame::where('user_id', auth()->id())
+                ->where('game_id', $game->id)
+                ->exists();
+        }
+        
+        return view('games.show', compact('game', 'inCart', 'isPurchased'));
     }
 }

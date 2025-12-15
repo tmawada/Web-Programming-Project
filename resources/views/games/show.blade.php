@@ -112,23 +112,40 @@
                     <div class="bg-cyber-bg p-6 rounded-xl border border-cyber-secondary/30 h-fit">
                         <div class="text-4xl font-bold text-white mb-6">${{ $game->price }}</div>
                         
-                        @if($inCart)
-                            <!-- Remove from Cart Button -->
-                            <form action="{{ route('cart.remove', $game->id) }}" method="POST" class="mb-4">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="w-full bg-red-500/20 border-2 border-red-500 text-red-400 hover:bg-red-500 hover:text-white font-bold py-4 px-6 rounded-lg shadow-lg transform transition hover:scale-105">
-                                    Remove from Cart
-                                </button>
-                            </form>
+                        @if($isPurchased)
+                            <!-- Purchased Badge -->
+                            <div class="mb-4 bg-green-500/20 border-2 border-green-500 rounded-lg p-4 text-center">
+                                <div class="flex items-center justify-center gap-2 mb-2">
+                                    <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span class="text-green-400 font-bold text-lg">Purchased</span>
+                                </div>
+                                <p class="text-green-300 text-sm">You own this game</p>
+                            </div>
+                            
+                            <a href="{{ route('library.index') }}" class="block w-full text-center bg-cyber-secondary hover:bg-cyber-primary text-white font-bold py-4 px-6 rounded-lg shadow-lg transform transition hover:scale-105 mb-4">
+                                View in Library
+                            </a>
                         @else
-                            <!-- Add to Cart Button -->
-                            <form action="{{ route('cart.add', $game) }}" method="POST" class="mb-4">
-                                @csrf
-                                <button type="submit" class="w-full bg-gradient-to-r from-cyber-primary to-cyber-secondary hover:from-pink-500 hover:to-purple-600 text-white font-bold py-4 px-6 rounded-lg shadow-lg transform transition hover:scale-105">
-                                    Add to Cart
-                                </button>
-                            </form>
+                            @if($inCart)
+                                <!-- Remove from Cart Button -->
+                                <form action="{{ route('cart.remove', $game->id) }}" method="POST" class="mb-4">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="w-full bg-red-500/20 border-2 border-red-500 text-red-400 hover:bg-red-500 hover:text-white font-bold py-4 px-6 rounded-lg shadow-lg transform transition hover:scale-105">
+                                        Remove from Cart
+                                    </button>
+                                </form>
+                            @else
+                                <!-- Add to Cart Button -->
+                                <form action="{{ route('cart.add', $game) }}" method="POST" class="mb-4">
+                                    @csrf
+                                    <button type="submit" class="w-full bg-gradient-to-r from-cyber-primary to-cyber-secondary hover:from-pink-500 hover:to-purple-600 text-white font-bold py-4 px-6 rounded-lg shadow-lg transform transition hover:scale-105">
+                                        Add to Cart
+                                    </button>
+                                </form>
+                            @endif
                         @endif
                         
                         <p class="text-xs text-gray-500 text-center mb-6">Instant Digital Download. Secure Checkout.</p>
