@@ -72,8 +72,29 @@
 
             <!-- Pagination -->
             <div class="mt-8">
-                {{ $games->links() }}
+                <div class="flex justify-center">
+                    {{ $games->links('pagination::tailwind', ['class' => 'cyberpunk-pagination']) }}
+                </div>
             </div>
         </div>
     </div>
+
+    <style>
+        .cyberpunk-pagination nav {
+            @apply flex items-center gap-2;
+        }
+        .cyberpunk-pagination nav span,
+        .cyberpunk-pagination nav a {
+            @apply px-4 py-2 text-sm font-semibold rounded-lg transition-all;
+        }
+        .cyberpunk-pagination nav a {
+            @apply bg-cyber-bg border-2 border-cyber-secondary/30 text-cyber-text hover:border-cyber-primary/50 hover:bg-cyber-primary/10;
+        }
+        .cyberpunk-pagination nav span[aria-current="page"] {
+            @apply bg-gradient-to-r from-cyber-primary to-cyber-secondary text-white border-2 border-transparent shadow-lg;
+        }
+        .cyberpunk-pagination nav span[aria-disabled="true"] {
+            @apply bg-cyber-bg/50 border-2 border-cyber-secondary/20 text-gray-600 cursor-not-allowed;
+        }
+    </style>
 </x-app-layout>

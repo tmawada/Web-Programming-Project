@@ -58,13 +58,16 @@
                     <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         @foreach($friends as $friend)
                             <li class="bg-cyber-bg p-4 rounded border border-cyber-secondary/20 flex justify-between items-center">
-                                <div class="flex items-center space-x-3">
-                                    <div class="h-10 w-10 rounded-full bg-cyber-secondary/20 flex items-center justify-center text-cyber-primary font-bold">
+                                <div class="flex items-center space-x-3 flex-1 min-w-0">
+                                    <div class="h-10 w-10 rounded-full bg-gradient-to-br from-cyber-primary to-cyber-secondary flex items-center justify-center text-white font-bold flex-shrink-0">
                                         {{ substr($friend->name, 0, 1) }}
                                     </div>
-                                    <span class="text-gray-200 font-medium">{{ $friend->name }}</span>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="text-cyber-text font-medium truncate">{{ $friend->name }}</div>
+                                        <div class="text-gray-500 text-sm">@{{ $friend->username }}</div>
+                                    </div>
                                 </div>
-                                <a href="{{ route('chat.show', $friend->id) }}" class="bg-cyber-secondary/20 text-cyber-secondary hover:bg-cyber-secondary hover:text-white px-3 py-1 rounded text-xs transition">
+                                <a href="{{ route('chat.show', $friend->id) }}" class="bg-cyber-secondary/20 text-cyber-secondary hover:bg-cyber-secondary hover:text-white px-3 py-1 rounded text-xs transition flex-shrink-0">
                                     Chat
                                 </a>
                             </li>
@@ -105,20 +108,49 @@
                 </div>
 
                 @if(request()->has('search') && count($users) > 0)
-                    <ul class="space-y-2">
-                        @foreach($users as $user)
-                            <li class="flex justify-between items-center bg-cyber-bg p-3 rounded border border-cyber-secondary/20">
-                                <span class="text-gray-300">{{ $user->name }}</span>
-                                <form action="{{ route('friends.store') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="friend_id" value="{{ $user->id }}">
-                                    <button type="submit" class="text-cyber-primary hover:text-cyber-secondary text-sm font-medium">Add Friend</button>
-                                </form>
-                            </li>
+                    <div class="space-y-3">
+                        @foreach($users as $u)
+                            @php
+                                $isAlreadyFriend = in_array($u->id, $existingFriendIds);
+                                $isPending = in_array($u->id, $pendingRequestIds);
+                            @endphp
+                            <div class="bg-cyber-bg rounded-lg border border-cyber-secondary/20 p-4 hover:border-cyber-primary/50 transition">
+                                <div class="flex items-center justify-between gap-4">
+                                    <div class="flex items-center gap-3 flex-1 min-w-0">
+                                        <div class="h-12 w-12 rounded-full bg-gradient-to-br from-cyber-primary to-cyber-secondary flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                                            {{ substr($u->name, 0, 1) }}
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <h4 class="text-cyber-text font-semibold truncate">{{ $u->name }}</h4>
+                                            <p class="text-gray-500 text-sm">@ {{ $u->username }}</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex-shrink-0">
+                                        @if($isAlreadyFriend)
+                                            <span class="px-4 py-2 bg-green-500/20 border border-green-500/50 text-green-400 rounded-lg font-medium text-sm">
+                                                Friends
+                                            </span>
+                                        @elseif($isPending)
+                                            <span class="px-4 py-2 bg-yellow-500/20 border border-yellow-500/50 text-yellow-400 rounded-lg font-medium text-sm">
+                                                Pending
+                                            </span>
+                                        @else
+                                            <form action="{{ route('friends.store') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="friend_id" value="{{ $u->id }}">
+                                                <button type="submit" class="px-4 py-2 bg-cyber-primary/20 border border-cyber-primary/50 text-cyber-primary hover:bg-cyber-primary hover:text-white rounded-lg font-medium transition text-sm">
+                                                    Add Friend
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
                         @endforeach
-                    </ul>
+                    </div>
                 @elseif(request()->has('search'))
-                    <p class="text-gray-500">No users found.</p>
+                    <p class="text-gray-500 text-center py-8">No users found matching "{{ request('search') }}"</p>
                 @endif
             </div>
 

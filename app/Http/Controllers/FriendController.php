@@ -21,70 +21,71 @@ class FriendController extends Controller
         $requests = \App\Models\Friend::where('friend_id', $user->id)
             ->where('status', 'pending')->with('user')->get();
 
+        // Get existing friend IDs
+        $existingFriendIds = \App\Models\Friend::where(function($q) use ($user) {
+            $q->where('user_id', $user->id)->orWhere('friend_id', $user->id);
+        })->where('status', 'accepted')->get()->map(function($friend) use ($user) {
+            return $friend->user_id == $user->id ? $friend->friend_id : $friend->user_id;
+        })->toArray();
+
+        // Get pending request IDs (both sent and received)
+        $pendingRequestIds = \App\Models\Friend::where(function($q) use ($user) {
+            $q->where('user_id', $user->id)->orWhere('friend_id', $user->id);
+        })->where('status', 'pending')->get()->map(function($friend) use ($user) {
+            return $friend->user_id == $user->id ? $friend->friend_id : $friend->user_id;
+        })->toArray();
+
         // Search Users
         $users = [];
         if ($request->has('search')) {
             $search = $request->get('search');
             $users = \App\Models\User::where('id', '!=', $user->id)
-                ->where('name', 'like', "%{$search}%")
-                ->whereDoesntHave('friends', function($q) use ($user) {
-                    $q->where('friend_id', $user->id);
-                }) // Basic exclusion, ideally exclude existing friends properly logic is complex
-                ->get();
-            // Simplify search: just get users matching name, view will handle "already friend" check visually if needed, or refine here.
-            // Let's refine: Exclude if a friendship record exists either way.
-            $existingFriendIds = \App\Models\Friend::where('user_id', $user->id)->pluck('friend_id')->toArray();
-            $existingFriendIds2 = \App\Models\Friend::where('friend_id', $user->id)->pluck('user_id')->toArray();
-            $excludeIds = array_merge([$user->id], $existingFriendIds, $existingFriendIds2);
-
-            $users = \App\Models\User::whereNotIn('id', $excludeIds)
-                ->where('name', 'like', "%{$search}%")
+                ->where(function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('username', 'like', "%{$search}%");
+                })
                 ->get();
         }
 
-        return view('friends.index', compact('friends', 'requests', 'users'));
+        return view('friends.index', compact('requests', 'friends', 'users', 'existingFriendIds', 'pendingRequestIds'));
     }
 
     public function store(Request $request)
     {
         $request->validate(['friend_id' => 'required|exists:users,id']);
-        
-        // Prevent duplicate
-        $exists = \App\Models\Friend::where(function($q) use ($request) {
-            $q->where('user_id', auth()->id())->where('friend_id', $request->friend_id);
-        })->orWhere(function($q) use ($request) {
-            $q->where('user_id', $request->friend_id)->where('friend_id', auth()->id());
-        })->exists();
 
-        if (!$exists) {
-            \App\Models\Friend::create([
-                'user_id' => auth()->id(),
-                'friend_id' => $request->friend_id,
-                'status' => 'pending'
-            ]);
+        $friend = \App\Models\Friend::create([
+            'user_id' => auth()->id(),
+            'friend_id' => $request->friend_id,
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('friends.index')->with('success', 'Friend request sent!');
+    }
+
+    public function accept($id)
+    {
+        $friendRequest = \App\Models\Friend::findOrFail($id);
+        
+        if ($friendRequest->friend_id != auth()->id()) {
+            abort(403);
         }
 
-        return back()->with('success', 'Friend request sent!');
+        $friendRequest->update(['status' => 'accepted']);
+
+        return redirect()->route('friends.index')->with('success', 'Friend request accepted!');
     }
 
-    public function update(Request $request, $id)
+    public function decline($id)
     {
-        $friendship = \App\Models\Friend::where('id', $id)->where('friend_id', auth()->id())->firstOrFail();
-        $friendship->update(['status' => 'accepted']);
-
-        return back()->with('success', 'Friend request accepted!');
-    }
-
-    public function destroy($id)
-    {
-        // Allow deleting if user is involved
-        $friendship = \App\Models\Friend::where('id', $id)
-            ->where(function($q) {
-                $q->where('user_id', auth()->id())->orWhere('friend_id', auth()->id());
-            })->firstOrFail();
+        $friendRequest = \App\Models\Friend::findOrFail($id);
         
-        $friendship->delete();
+        if ($friendRequest->friend_id != auth()->id()) {
+            abort(403);
+        }
 
-        return back()->with('success', 'Friend removed.');
+        $friendRequest->delete();
+
+        return redirect()->route('friends.index')->with('success', 'Friend request declined.');
     }
 }

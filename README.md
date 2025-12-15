@@ -1,10 +1,10 @@
-# ARCHEX - Cyberpunk Game Store
+# ARCHEX - Game Store
 
 ![ARCHEX Logo](https://img.shields.io/badge/ARCHEX-Game%20Store-d946ef?style=for-the-badge)
 
 **ARCHEX** is a modern, cyberpunk-themed digital game store built with Laravel 11. Experience a sleek, futuristic interface for browsing, purchasing, and managing your game library.
 
-## 🎮 Features
+## Features
 
 - **Game Store**: Browse and search through a curated collection of games
 - **User Authentication**: Secure username-based login and registration
@@ -15,7 +15,7 @@
 - **Admin Panel**: Manage games and store content
 - **Responsive Design**: Optimized for desktop and mobile devices
 
-## 🎨 Design
+## Design
 
 ARCHEX features a stunning cyberpunk aesthetic with:
 - Deep dark blue/purple background (`#0f0f1a`)
@@ -24,7 +24,7 @@ ARCHEX features a stunning cyberpunk aesthetic with:
 - Smooth animations and transitions
 - Modern card-based layouts
 
-## 📋 Prerequisites
+## Prerequisites
 
 Before installing ARCHEX, ensure you have the following installed on your Windows system:
 
@@ -51,7 +51,7 @@ Before installing ARCHEX, ensure you have the following installed on your Window
 4. **Install Git**:
    - Download from [git-scm.com](https://git-scm.com/download/win)
 
-## 🚀 Installation & Setup
+## Installation & Setup
 
 ### 1. Clone the Repository
 
@@ -137,7 +137,7 @@ php artisan serve
 
 The application will be available at: **http://localhost:8000**
 
-## 🎯 Default Credentials
+## Default Credentials
 
 ### Admin Account
 - **Username**: `admin`
@@ -149,7 +149,7 @@ The application will be available at: **http://localhost:8000**
 - **Email**: `tmawada@archex.com`
 - **Password**: `12345678`
 
-## 📱 Usage Guide
+## Usage Guide
 
 ### For Customers
 
@@ -168,14 +168,14 @@ The application will be available at: **http://localhost:8000**
 2. **Admin Panel**: Access via user dropdown menu
 3. **Manage Games**: Add, edit, or remove games from the store
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 - **Backend**: Laravel 11 (PHP)
 - **Frontend**: Blade Templates, Alpine.js, TailwindCSS (CDN)
 - **Database**: MySQL
 - **Authentication**: Laravel Breeze (username-based)
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ARCHEX/
@@ -193,7 +193,7 @@ ARCHEX/
 └── public/                    # Public assets
 ```
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -209,25 +209,10 @@ ARCHEX/
 **Issue**: Migrations fail
 - **Solution**: Drop the database and recreate it, then run migrations again
 
-## 🤝 Contributing
+## Contributing
 
 This is a student project for Web Programming course. Contributions and suggestions are welcome!
 
-## 📄 License
 
-This project is created for educational purposes.
+**Enjoy your ARCHEX experience!**
 
-## 👨‍💻 Author
-
-**Tommy Mawada**
-- GitHub: [@tmawada](https://github.com/tmawada)
-
-## 🎓 Academic Information
-
-- **Course**: Web Programming
-- **Institution**: [Your University Name]
-- **Year**: 2025
-
----
-
-**Enjoy your ARCHEX experience! 🎮✨**
