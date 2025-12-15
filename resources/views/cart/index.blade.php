@@ -13,62 +13,80 @@
                 </div>
             @endif
 
+            @if (session('info'))
+                <div class="mb-4 bg-blue-500/10 border border-blue-500 text-blue-400 px-4 py-3 rounded relative" role="alert">
+                    <span class="block sm:inline">{{ session('info') }}</span>
+                </div>
+            @endif
+
             <div class="bg-cyber-alt overflow-hidden shadow-xl sm:rounded-lg border border-cyber-secondary/30">
                 <div class="p-6">
                     @if(!$cart || $cart->items->isEmpty())
-                        <div class="text-center py-10">
+                        <div class="text-center py-16">
+                            <svg class="mx-auto h-24 w-24 text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
                             <p class="text-gray-400 text-xl mb-6">Your cart is empty.</p>
-                            <a href="{{ route('games.index') }}" class="text-cyber-primary hover:text-white underline">Browse Games</a>
+                            <a href="{{ route('games.index') }}" class="inline-block bg-cyber-primary hover:bg-pink-600 text-white font-bold py-3 px-8 rounded-lg transition">
+                                Browse Games
+                            </a>
                         </div>
                     @else
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-gray-400">
-                                <thead class="text-xs text-cyber-secondary uppercase bg-cyber-bg">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3">Game</th>
-                                        <th scope="col" class="px-6 py-3">Price</th>
-                                        <th scope="col" class="px-6 py-3">Quantity</th>
-                                        <th scope="col" class="px-6 py-3">Total</th>
-                                        <th scope="col" class="px-6 py-3 text-right">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($cart->items as $item)
-                                        <tr class="bg-cyber-alt border-b border-cyber-secondary/10 hover:bg-cyber-bg/50 transition">
-                                            <td class="px-6 py-4 font-medium text-white flex items-center gap-4">
-                                                <img src="{{ $item->game->cover_image }}" class="w-12 h-12 object-cover rounded" alt="">
-                                                {{ $item->game->title }}
-                                            </td>
-                                            <td class="px-6 py-4">${{ $item->game->price }}</td>
-                                            <td class="px-6 py-4">
-                                                {{ $item->quantity }}
-                                            </td>
-                                            <td class="px-6 py-4 text-cyber-primary font-bold">
-                                                ${{ $item->game->price * $item->quantity }}
-                                            </td>
-                                            <td class="px-6 py-4 text-right">
-                                                <form action="{{ route('cart.remove', $item) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="text-red-500 hover:text-red-400 font-medium">Remove</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                        <!-- Cart Items as Cards -->
+                        <div class="space-y-4 mb-8">
+                            @foreach($cart->items as $item)
+                                <div class="bg-cyber-bg rounded-lg border border-cyber-secondary/20 p-4 hover:border-cyber-primary/50 transition">
+                                    <div class="flex items-center gap-4">
+                                        <!-- Game Cover -->
+                                        <a href="{{ route('games.show', $item->game) }}" class="flex-shrink-0">
+                                            <img src="{{ $item->game->cover_image }}" class="w-24 h-32 object-cover rounded-lg" alt="{{ $item->game->title }}">
+                                        </a>
+                                        
+                                        <!-- Game Info -->
+                                        <div class="flex-1 min-w-0">
+                                            <a href="{{ route('games.show', $item->game) }}" class="hover:text-cyber-primary transition">
+                                                <h3 class="text-lg font-bold text-white mb-1">{{ $item->game->title }}</h3>
+                                            </a>
+                                            <p class="text-sm text-gray-400 mb-2">{{ $item->game->genre }} • {{ $item->game->platform }}</p>
+                                            <div class="flex items-center gap-4">
+                                                <span class="text-2xl font-bold text-cyber-primary">${{ $item->game->price }}</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Remove Button -->
+                                        <div class="flex-shrink-0">
+                                            <form action="{{ route('cart.remove', $item->game->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="bg-red-500/20 border border-red-500/50 text-red-400 hover:bg-red-500 hover:text-white px-4 py-2 rounded-lg font-medium transition">
+                                                    Remove
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
 
-                        <div class="mt-8 flex justify-between items-center bg-cyber-bg p-6 rounded-lg">
-                            <div class="text-gray-400">
-                                <a href="{{ route('games.index') }}" class="hover:text-white transition">← Continue Shopping</a>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-lg text-gray-400 mb-1">Subtotal:</p>
-                                <p class="text-3xl font-bold text-white mb-4">${{ $cart->items->sum(fn($i) => $i->game->price * $i->quantity) }}</p>
-                                <a href="{{ route('checkout.index') }}" class="inline-block bg-cyber-primary hover:bg-pink-600 text-white font-bold py-3 px-8 rounded shadow-lg transform transition hover:-translate-y-1">
-                                    Proceed to Checkout
+                        <!-- Cart Summary -->
+                        <div class="border-t border-cyber-secondary/30 pt-6">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                <a href="{{ route('games.index') }}" class="text-cyber-secondary hover:text-cyber-primary transition flex items-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                    </svg>
+                                    Continue Shopping
                                 </a>
+                                
+                                <div class="flex flex-col items-end gap-4">
+                                    <div class="text-right">
+                                        <p class="text-sm text-gray-400 mb-1">Total ({{ $cart->items->count() }} {{ Str::plural('item', $cart->items->count()) }})</p>
+                                        <p class="text-4xl font-bold text-white">${{ $cart->items->sum(fn($i) => $i->game->price) }}</p>
+                                    </div>
+                                    <a href="{{ route('checkout.index') }}" class="bg-gradient-to-r from-cyber-primary to-cyber-secondary hover:from-pink-500 hover:to-purple-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg transform transition hover:scale-105">
+                                        Proceed to Checkout
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     @endif

@@ -11,7 +11,7 @@ Route::get('/games/{game}', [GameController::class, 'show'])->name('games.show')
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/{game}', [CartController::class, 'add'])->name('cart.add');
-Route::delete('/cart/{item}', [CartController::class, 'remove'])->name('cart.remove');
+Route::delete('/cart/{gameId}', [CartController::class, 'remove'])->name('cart.remove');
 
 // Fallback for dashboard route to prevent 404/RouteNotFound
 Route::get('/dashboard', function () {

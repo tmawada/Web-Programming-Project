@@ -22,6 +22,20 @@ class GameController extends Controller
 
     public function show(Game $game)
     {
-        return view('games.show', compact('game'));
+        // Check if game is already in cart
+        $inCart = false;
+        if (auth()->check()) {
+            $cart = \App\Models\Cart::where('user_id', auth()->id())->first();
+            if ($cart) {
+                $inCart = $cart->items()->where('game_id', $game->id)->exists();
+            }
+        } else {
+            $cart = \App\Models\Cart::where('session_id', session()->getId())->first();
+            if ($cart) {
+                $inCart = $cart->items()->where('game_id', $game->id)->exists();
+            }
+        }
+        
+        return view('games.show', compact('game', 'inCart'));
     }
 }

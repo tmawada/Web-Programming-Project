@@ -64,14 +64,17 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Game added to cart!');
     }
 
-    public function remove(CartItem $item)
+    public function remove($gameId)
     {
-        // Security check: ensure item belongs to current user's cart
         $cart = $this->getCart();
-        if ($item->cart_id === $cart->id) {
-            $item->delete();
+        
+        if ($cart) {
+            $item = $cart->items()->where('game_id', $gameId)->first();
+            if ($item) {
+                $item->delete();
+            }
         }
 
-        return redirect()->route('cart.index')->with('success', 'Item removed.');
+        return redirect()->back()->with('success', 'Item removed from cart.');
     }
 }
