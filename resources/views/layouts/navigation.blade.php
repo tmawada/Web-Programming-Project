@@ -16,6 +16,9 @@
                         {{ __('Store') }}
                     </x-nav-link>
                     @auth
+                        <x-nav-link :href="route('library.index')" :active="request()->routeIs('library.*')">
+                            {{ __('Your Games') }}
+                        </x-nav-link>
                         <x-nav-link :href="route('friends.index')" :active="request()->routeIs('friends.*')">
                             {{ __('Friends') }}
                         </x-nav-link>
@@ -111,6 +114,11 @@
             <x-responsive-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.index')">
                 {{ __('Cart') }}
             </x-responsive-nav-link>
+            @auth
+                <x-responsive-nav-link :href="route('library.index')" :active="request()->routeIs('library.*')">
+                    {{ __('Your Games') }}
+                </x-responsive-nav-link>
+            @endauth
         </div>
 
         <!-- Responsive Settings Options -->

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\UserGame;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -49,26 +50,35 @@ class CheckoutController extends Controller
         $total = $cart->items->sum(function($item) {
             return $item->game->price * $item->quantity;
         });
-
+        // Create order
         $order = Order::create([
-            'user_id' => Auth::id(),
+            'user_id' => auth()->id(),
             'total_price' => $total,
             'status' => 'completed',
         ]);
 
+        // Create order items and add games to user library
         foreach ($cart->items as $item) {
-            OrderItem::create([
-                'order_id' => $order->id,
+            $order->items()->create([
                 'game_id' => $item->game_id,
                 'quantity' => $item->quantity,
                 'price' => $item->game->price,
+            ]);
+
+            // Add game to user's library
+            UserGame::create([
+                'user_id' => auth()->id(),
+                'game_id' => $item->game_id,
+                'order_id' => $order->id,
+                'purchased_at' => now(),
             ]);
         }
 
         // Clear cart
         $cart->items()->delete();
-        $cart->delete();
+        // The cart itself is not deleted, only its items.
+        // $cart->delete(); // Removed this line as per instruction
 
-        return redirect()->route('games.index')->with('success', 'Order placed successfully!');
+        return redirect()->route('library.index')->with('success', 'Order placed successfully! Your games are now in your library.');
     }
 }
