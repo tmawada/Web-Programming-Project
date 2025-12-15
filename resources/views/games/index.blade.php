@@ -16,34 +16,32 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Grid: 2x4 layout (4 columns, 2 rows with 8 items per page) -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 @forelse($games as $game)
-                    <div class="bg-cyber-alt border border-cyber-secondary/50 rounded-lg overflow-hidden shadow-[0_0_15px_rgba(139,92,246,0.1)] hover:shadow-[0_0_25px_rgba(217,70,239,0.3)] transition transform hover:-translate-y-1">
-                        <a href="{{ route('games.show', $game) }}">
-                            <div class="h-48 overflow-hidden relative group">
-                                <img src="{{ $game->cover_image }}" alt="{{ $game->title }}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
-                                <div class="absolute inset-0 bg-gradient-to-t from-cyber-bg to-transparent opacity-60"></div>
+                    <div class="bg-cyber-alt border border-cyber-secondary/50 rounded-lg overflow-hidden shadow-[0_0_15px_rgba(139,92,246,0.1)] hover:shadow-[0_0_25px_rgba(217,70,239,0.3)] transition transform hover:-translate-y-1 flex flex-col">
+                        <a href="{{ route('games.show', $game) }}" class="block">
+                            <div class="aspect-[3/4] overflow-hidden relative group">
+                                <img src="{{ $game->cover_image }}" alt="{{ $game->title }}" class="w-full h-full object-cover transition duration-500 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-cyber-bg via-transparent to-transparent opacity-60"></div>
+                                <span class="absolute top-2 right-2 bg-cyber-secondary/90 text-white text-xs px-2 py-1 rounded border border-cyber-secondary">{{ $game->genre }}</span>
                             </div>
                         </a>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <a href="{{ route('games.show', $game) }}">
-                                    <h3 class="text-lg font-bold text-cyber-text hover:text-cyber-primary truncate transition">{{ $game->title }}</h3>
-                                </a>
-                                <span class="bg-cyber-secondary/20 text-cyber-secondary text-xs px-2 py-1 rounded border border-cyber-secondary/50">{{ $game->genre }}</span>
-                            </div>
+                        <div class="p-3 flex flex-col flex-1">
+                            <a href="{{ route('games.show', $game) }}">
+                                <h3 class="text-sm font-bold text-cyber-text hover:text-cyber-primary transition line-clamp-2 mb-2">{{ $game->title }}</h3>
+                            </a>
                             
-                            <p class="text-gray-400 text-sm mb-4 line-clamp-2 h-10">{{ $game->description }}</p>
-                            
-                            <div class="flex justify-between items-center mt-auto">
-                                <span class="text-xl font-bold text-cyber-primary">${{ $game->price }}</span>
-                                <form action="{{ route('cart.add', $game) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="bg-transparent border border-cyber-primary text-cyber-primary hover:bg-cyber-primary hover:text-white px-3 py-1 rounded text-sm transition uppercase tracking-wide font-semibold">
-                                        Add to Cart
-                                    </button>
-                                </form>
+                            <div class="mt-auto">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-lg font-bold text-cyber-primary">${{ $game->price }}</span>
+                                    <form action="{{ route('cart.add', $game) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="bg-transparent border border-cyber-primary text-cyber-primary hover:bg-cyber-primary hover:text-white px-2 py-1 rounded text-xs transition uppercase tracking-wide font-semibold">
+                                            Add
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -20,6 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'username',
         'password',
         'is_admin',
     ];
@@ -46,5 +47,10 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_admin' => 'boolean',
         ];
+    }
+
+    public function friends()
+    {
+        return $this->hasMany(\App\Models\Friend::class, 'user_id');
     }
 }

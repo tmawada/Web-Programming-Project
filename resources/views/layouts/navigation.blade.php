@@ -15,6 +15,11 @@
                     <x-nav-link :href="route('games.index')" :active="request()->routeIs('games.index')">
                         {{ __('Store') }}
                     </x-nav-link>
+                    @auth
+                        <x-nav-link :href="route('friends.index')" :active="request()->routeIs('friends.*')">
+                            {{ __('Friends') }}
+                        </x-nav-link>
+                    @endauth
                 </div>
             </div>
 

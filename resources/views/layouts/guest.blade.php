@@ -38,9 +38,9 @@
     </head>
     <body class="font-sans text-cyber-text antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-cyber-bg">
-            <div>
+            <div class="mb-6">
                 <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-cyber-primary" />
+                    <x-application-logo class="text-center" />
                 </a>
             </div>
 

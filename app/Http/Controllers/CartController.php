@@ -53,8 +53,7 @@ class CartController extends Controller
         $cartItem = $cart->items()->where('game_id', $game->id)->first();
 
         if ($cartItem) {
-            $cartItem->quantity += 1;
-            $cartItem->save();
+            return redirect()->back()->with('info', 'This game is already in your cart.');
         } else {
             $cart->items()->create([
                 'game_id' => $game->id,

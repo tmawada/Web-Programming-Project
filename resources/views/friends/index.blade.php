@@ -17,26 +17,37 @@
             <!-- Friend Requests -->
             @if($requests->count() > 0)
                 <div class="bg-cyber-alt shadow sm:rounded-lg border border-cyber-secondary/30 p-6">
-                    <h3 class="text-lg font-medium text-cyber-text mb-4">Friend Requests</h3>
-                    <ul class="space-y-4">
+                    <h3 class="text-lg font-medium text-cyber-text mb-4 flex items-center">
+                        <span class="bg-cyber-primary text-white text-xs px-2 py-1 rounded-full mr-2">{{ $requests->count() }}</span>
+                        Friend Requests
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         @foreach($requests as $req)
-                            <li class="flex justify-between items-center bg-cyber-bg p-3 rounded border border-cyber-secondary/20">
-                                <span class="text-gray-300">{{ $req->user->name }}</span>
+                            <div class="bg-cyber-bg p-4 rounded-lg border border-cyber-secondary/20 flex justify-between items-center hover:border-cyber-primary/50 transition">
+                                <div class="flex items-center space-x-3">
+                                    <div class="h-12 w-12 rounded-full bg-gradient-to-br from-cyber-primary to-cyber-secondary flex items-center justify-center text-white font-bold text-lg">
+                                        {{ substr($req->user->name, 0, 1) }}
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-200 font-medium block">{{ $req->user->name }}</span>
+                                        <span class="text-gray-500 text-xs">@{{ $req->user->username }}</span>
+                                    </div>
+                                </div>
                                 <div class="flex space-x-2">
                                     <form action="{{ route('friends.update', $req->id) }}" method="POST">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="text-green-400 hover:text-green-300 text-sm">Accept</button>
+                                        <button type="submit" class="bg-green-500/20 text-green-400 hover:bg-green-500 hover:text-white px-3 py-1.5 rounded text-sm font-medium transition border border-green-500/50">Accept</button>
                                     </form>
                                     <form action="{{ route('friends.destroy', $req->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-400 hover:text-red-300 text-sm">Decline</button>
+                                        <button type="submit" class="bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white px-3 py-1.5 rounded text-sm font-medium transition border border-red-500/50">Decline</button>
                                     </form>
                                 </div>
-                            </li>
+                            </div>
                         @endforeach
-                    </ul>
+                    </div>
                 </div>
             @endif
 
