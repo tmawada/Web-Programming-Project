@@ -30,7 +30,7 @@
                                     </div>
                                     <div>
                                         <span class="text-gray-200 font-medium block">{{ $req->user->name }}</span>
-                                        <span class="text-gray-500 text-xs">@{{ $req->user->username }}</span>
+                                        <span class="text-gray-500 text-xs">@ {{ $req->user->username }}</span>
                                     </div>
                                 </div>
                                 <div class="flex space-x-2">
@@ -64,7 +64,7 @@
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <div class="text-cyber-text font-medium truncate">{{ $friend->name }}</div>
-                                        <div class="text-gray-500 text-sm">@{{ $friend->username }}</div>
+                                        <div class="text-gray-500 text-sm">@ {{ $friend->username }}</div>
                                     </div>
                                 </div>
                                 <a href="{{ route('chat.show', $friend->id) }}" class="bg-cyber-secondary/20 text-cyber-secondary hover:bg-cyber-secondary hover:text-white px-3 py-1 rounded text-xs transition flex-shrink-0">

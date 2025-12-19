@@ -88,4 +88,15 @@ class FriendController extends Controller
 
         return redirect()->route('friends.index')->with('success', 'Friend request declined.');
     }
+
+    // Route-compatible methods: `update` for accepting and `destroy` for declining
+    public function update(Request $request, $id)
+    {
+        return $this->accept($id);
+    }
+
+    public function destroy($id)
+    {
+        return $this->decline($id);
+    }
 }
