@@ -20,9 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (app()->environment('local') && !cache()->has('seeded')) {
+        if (app()->environment('local')) {
             Artisan::call('db:seed', ['--force' => true]);
-            cache()->forever('seeded', true);
         }
 
     }
