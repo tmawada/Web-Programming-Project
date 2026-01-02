@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UserSeeder extends Seeder
 {
@@ -13,6 +15,8 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        Log::info('Seeder DB name: ' . DB::connection()->getDatabaseName());
+        
         $users = [
             [
                 'name' => 'Admin',
